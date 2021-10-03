@@ -5,6 +5,11 @@ c = conn.cursor()
 
 
 def add_subject():
-    subject_name = input("[Enter the name of the new Subject]: ")
-    c.execute("CREATE TABLE {} (grade, date)".format(subject_name))
-    conn.commit()
+    while True:
+        subject_name = input("[Enter the name of the new Subject]: ")
+        try:
+            c.execute("CREATE TABLE {} (grade, date)".format(subject_name))
+            conn.commit()
+            break
+        except:
+            print("[This subject already exists or you enter invalid name]")
