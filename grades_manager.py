@@ -40,3 +40,26 @@ def view_grades():
         grades = list(map(lambda x: "".join(x), c.fetchall()))
         average = sum(list(map(lambda x: int(x), grades)))/len(grades)
         print(f"[{i}]" + " "*(15-len(i)) + "({:.2f}) ".format(average) + " ".join(grades))
+
+
+def delete_subject():
+    while True:
+        subject_name = input("[Enter the name of the Subject you want to delete]: ")
+        if subject_name == "q":
+            break
+        c.execute("SELECT count(name) FROM sqlite_master WHERE type='table' AND name='{}'".format(subject_name))
+        if c.fetchone()[0] == 1:
+            while True:
+                warning = input("[Are you sure you want to delete {}? (y/n)]: ".format(subject_name))
+                if warning == "y":
+                    c.execute("DROP TABLE {}".format(subject_name))
+                    conn.commit()
+                    print(f"[{subject_name} deleted]")
+                    break
+                elif warning == "n":
+                    break
+                else:
+                    print("[Invalid input]")
+            break
+        else:
+            print("[This Subject does not exists]")
