@@ -62,4 +62,40 @@ def delete_subject():
                     print("[Invalid input]")
             break
         else:
-            print("[This Subject does not exists]")
+            print("[This Subject does not exist]")
+
+
+def delete_grade():
+    while True:
+        subject_name = input("[Enter the name of the Subject]: ")
+        if subject_name == "q":
+            break
+        c.execute("SELECT count(name) FROM sqlite_master WHERE type='table' AND name='{}'".format(subject_name))
+        if c.fetchone()[0] == 1:
+            c.execute("SELECT rowid, * FROM {}".format(subject_name))
+            grades = c.fetchall()
+            while True:
+                for i in grades:
+                    print(f"[{i[0]}] {i[1]}")
+                grade_id = input("[Enter the [id] of the grade you want to delete]: ")
+                try:
+                    c.execute(f"SELECT * FROM {subject_name} WHERE rowid={grade_id}")
+                    grade = "".join(c.fetchone())
+                    while True:
+                        warning = input(f"[Are you sure you want to delete {grade} from {subject_name}? (y/n)]: ")
+                        if warning == "y":
+                            c.execute(f"DELETE from {subject_name} WHERE rowid={grade_id}")
+                            conn.commit()
+                            print(f"[{grade} deleted from {subject_name}]")
+                            break
+                        elif warning == "n":
+                            break
+                        else:
+                            print("[Invalid input]")
+                    break
+                except:
+                    print("[Invalid input]")
+            break
+        else:
+            print(f"[{subject_name} does not exist]")
+            
