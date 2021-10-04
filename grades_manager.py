@@ -30,3 +30,13 @@ def add_grade():
                 print("[Invalid grade]")
                 break
         print("[Invalid Subject]")
+
+
+def view_grades():
+    c.execute("SELECT name FROM sqlite_master WHERE type='table'")
+    subjects = list(map(lambda x: "".join(x), c.fetchall()))
+    for i in subjects:
+        c.execute("SELECT * FROM {}".format(i))
+        grades = list(map(lambda x: "".join(x), c.fetchall()))
+        average = sum(list(map(lambda x: int(x), grades)))/len(grades)
+        print(f"[{i}]" + " "*(15-len(i)) + "({:.2f}) ".format(average) + " ".join(grades))
