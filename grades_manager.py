@@ -38,7 +38,10 @@ def view_grades():
     for i in subjects:
         c.execute("SELECT * FROM {}".format(i))
         grades = list(map(lambda x: "".join(x), c.fetchall()))
-        average = sum(list(map(lambda x: int(x), grades)))/len(grades)
+        if len(grades) > 0:
+            average = sum(list(map(lambda x: int(x), grades)))/len(grades)
+        else:
+            average = 0
         print(f"[{i}]" + " "*(15-len(i)) + "({:.2f}) ".format(average) + " ".join(grades))
 
 
